@@ -1,0 +1,156 @@
+\subsection{Principe de l’achievement4}
+
+Dans cet achievement, on introduit deux nouveaux objets qui sont les archipals et les portals. Les archipals sont à voir comme des murs infranchissables par les bateaux, les torpilles ou même Godzilla. Les portals sont à voir comme des téléporteurs sur la grille, c'est à dire que quand une case d'un bateau, ou d'une torpille ou de Godzilla arrive sur un portal, elle est téléportée à une autre case associée au portal si elle va dans la direction activé par le portal (un portal téléporte un objet que s'il va dans une direction donnée, vers le haut, le bas, à gauche ou à droite; et cette direction est propre à chaque portal). Ces deux objets entraînent une grande conséquence sur la définition de distance et surtout de distance minimale en ce qui concerne le déplacement des torpilles puisque rappelons que les torpilles doivent aller vers la case d'un batal d'un joueur adverse la plus proche. 
+
+\subsection{Fonctionnement de l'achievement4}
+
+\subsubsection{Les nouvelles structures et constantes}
+Pour cet achievement, nous avons besoin de deux nouvelles constantes qui sont:
+\begin{itemize}
+\item \textit{NB\_PORTALS} est la constante indiquant le nombre de portals que l'on a dans la grille.
+\item \textit{NB\_ARCHIPALS} est la constante indiquant le nombre d'archipals que l'on a sur la grille. 
+\end{itemize} 
+\vspace{0.3cm}
+Nous introduisons deux nouvelles structures et une nouvelle énumération:
+\begin{itemize}
+\item L'énumération \textit{Cote\_case}:
+\begin{lstlisting}
+enum Cote_case{
+  HAUT=1, DROITE, BAS, GAUCHE
+};
+\end{lstlisting}
+Cette énumération est utile pour les portals puisqu'elle va permettre de savoir dans quelle direction aura lieu la téléportation. \\
+\item La structure de \textit{Portal}:
+\begin{lstlisting}
+struct Portal{
+  int indpos;
+  int arrive;
+  enum Cote_case cote;
+};
+\end{lstlisting}
+L'entier \textbf{indpos} est l'indice de la grille où se situe le portal, l'entier \textbf{arrive} est l'indice de la grille où la case sera téléportée lors du passage dans le portal et le \textbf{cote} permet de savoir dans quelle direction s'effectuera la téléportation (HAUT, DROITE, BAS ou GAUCHE).
+\newpage
+Pour comprendre ce qu'est un portal, regardons l'exemple suivant: \\
+\begin{center}
+\begin{tabular}[t]{c|c|c|c|c|c|c|c|c|c|c|}
+  \multicolumn{1}{c}{} & \multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} & \multicolumn{1}{c}{7} & \multicolumn{1}{c}{8} & \multicolumn{1}{c}{9} \\ 
+ \cline{2-11} 0 & & & & & & & & & \cellcolor{red} & \\
+ \cline{2-11} 1 & & & & & & & & & & \\
+ \cline{2-11} 2 & & & & & & & & & & \\
+ \cline{2-11} 3 & & & & & & & & & & \\
+ \cline{2-11} 4 & & & & & & & & & & \\
+ \cline{2-11} 5 & & & & & & & & & & \\
+ \cline{2-11} 6 & & & \multicolumn{1}{c||}{\textcolor{red}{8}} & & & & & & & \\
+ \cline{2-11} 7 & & & & & & & & & & \\
+ \cline{2-11} 8 & & & & & & & & & & \\
+ \cline{2-11} 9 & & & & & & & & & & \\
+ \cline{2-11} 
+\end{tabular} 
+\end{center} 
+\vspace{0.5cm}
+Sur cette exemple, un élément passant sur la case 62 et allant vers la droite se trouvera téléportée sur la case 8 de la grille. \\
+\item La structure de \textit{Chemin\_Minimal}:
+\begin{lstlisting}
+struct Chemin_Minimal{
+  int tab[NB_COLONNES*NB_LIGNES];
+  int taille;
+};
+\end{lstlisting}
+\end{itemize}
+La matrice utile pour l'algorithme de Floyd Warshall sera un tableau linéaire de cette structure, l'entier \textbf{taille} nous permettra de stocker la taille du chemin le plus court et le tableau \textbf{tab} nous permettra de stocker les cases par lesquelles passer pour obtenir le chemin le plus court. 
+
+\subsubsection{L'algorithme de Floyd Warshall}
+
+Pour redéfinir la notion de distance minimale, nous avons décidé d'utiliser l'algorithme de Floyd Warshall en considérant notre grille comme un graphe, chaque case est relié à 4 autres cases (même si c'est un portal) sauf dans le cas où la case est un archipal ou que la case se situe sur une bordure. L'algorithme de Floyd Warshall consiste à comparer deux chemins à chaque fois: le chemin de base (ou chemin le plus court gardé par l'algorithme dans les étapes précédentes) et le chemin en introduisant le passage par un autre sommet, et on garde en mémoire le chemin le plus court pour ensuite recommencer cette comparaison N fois avec N le nombre de sommet dans le graphe. Pour représenter le graphe, nous avons utilisé une matrice de poids où chaque arête est représenté par un poids de 1 dans la matrice initiale, la diagonale est rempli de 0 (arête d'un sommet vers lui même) et les cases inaccessibles d'un sommet à un autre sont représentés par des -1 (il faut voir ces -1 comme représentant l'infini). Il faut savoir que la taille de la matrice est de N*N avec N le nombre de case dans la grille. Comprenons l'algorithme de Floyd Warshall sur un exemple simple:
+\begin{center}
+$ A^0=
+\begin{pmatrix} 
+0 & 1 & 1 & 7 \\
+-1 & 0 & 1 & 3 \\
+-1 & -1 & 0 & 1 \\
+-1 & -1 & -1 & 0 \\
+\end{pmatrix}
+$
+\end{center}
+Avec cette matrice initiale, on constate que l'on peut aller:
+\begin{itemize}
+\item du sommet 1 au sommet 2 avec un poids de 1
+\item du sommet 1 au sommet 3 avec un poids de 1
+\item du sommet 1 au sommet 4 avec un poids de 7
+\item du sommet 2 au sommet 3 avec un poids de 1
+\item du sommet 2 au sommet 4 avec un poids de 3
+\item du sommet 3 au sommet 4 avec un poids de 1
+\end{itemize}
+Maintenant, on va appliquer la formule de l'algorithme de Floyd Warshall qui est la suivante: 
+\begin{center}
+$A_{i,j}^k = min ( A_{i,j}^{k-1}, A_{i,k}^{k-1} + A_{k,j}^{k-1} )$ 
+\end{center}
+Il faut appliquer cette formule pour k allant de 1 à 4 (afin de parcourir tous les sommets).
+On obtient donc les matrices suivantes: \\
+\begin{center}
+$ A^1=
+\begin{pmatrix} 
+0 & 1 & 1 & 7 \\
+-1 & 0 & 1 & 3 \\
+-1 & -1 & 0 & 1 \\
+-1 & -1 & -1 & 0 \\
+\end{pmatrix}
+$
+$ A^2=
+\begin{pmatrix} 
+0 & 1 & 1 & \textcolor{red}{4} \\
+-1 & 0 & 1 & 3 \\
+-1 & -1 & 0 & 1 \\
+-1 & -1 & -1 & 0 \\
+\end{pmatrix}
+$
+$ A^3=
+\begin{pmatrix} 
+0 & 1 & 1 & \textcolor{red}{2} \\
+-1 & 0 & 1 & \textcolor{red}{2} \\
+-1 & -1 & 0 & 1 \\
+-1 & -1 & -1 & 0 \\
+\end{pmatrix}
+$
+\end{center}
+Pour au final obtenir la matrice suivante:
+\begin{center}
+$ A^4=
+\begin{pmatrix} 
+0 & 1 & 1 & 2 \\
+-1 & 0 & 1 & 2 \\
+-1 & -1 & 0 & 1 \\
+-1 & -1 & -1 & 0 \\
+\end{pmatrix}
+$
+\end{center}
+Et maintenant, on peut aller:
+\begin{itemize}
+\item du sommet 1 au sommet 2 avec un poids de 1
+\item du sommet 1 au sommet 3 avec un poids de 1
+\item du sommet 1 au sommet 4 avec un poids de 2
+\item du sommet 2 au sommet 3 avec un poids de 1
+\item du sommet 2 au sommet 4 avec un poids de 2
+\item du sommet 3 au sommet 4 avec un poids de 1 \\
+\end{itemize}
+La fonction qui initialise la matrice est \textit{init\_floyd\_warshall} qui va donc modéliser notre matrice d'adjacence (matrice des poids):
+\begin{lstlisting}
+void init_floyd_warshall(struct Grille *grille, struct Chemin_Minimal tab[],struct Portal portals[])
+\end{lstlisting}
+Puis ensuite, on procède à l'algorithme de Floyd Warshall, pour cela nous utilisons la fonction \textit{floyd\_warshall}:
+\begin{lstlisting}
+void floyd_warshall(struct Chemin_Minimal tab[]) 
+\end{lstlisting}
+Il faut savoir que l'algorithme de Floyd Warshall a une complexité en temps assez élevée puisqu'elle est en $\Theta(N^{3})$ avec N le nombre de sommet du graphe (ou nombre d'indices dans la matrice de poids). 
+
+\subsubsection{Le fonctionnement général de l'achievement4}
+L'achievement4 fonctionne comme l'achievement1 en remplaçant la fonction \textit{distance\_minimale} par la fonction \textit{distminimale} qui utilise la matrice de poids modifiée par l'algorithme de Floyd Warshall.
+
+\subsection{Problèmes rencontrés}
+
+Nous avons rencontrés des problèmes pour cet achievement qui sont les suivants:
+\begin{itemize}
+\item Le premier problème a été de stocker dans la grille le fait que sur la case on ait un portal ou un archipal, pour les stocker on a donc codé un archipal avec le chiffre $-2$ et on a codé un portal avec l'indice de sa case d'arrivée + 1 (pour pas qu'il y ait de conflit avec la case d'indice 0 puisque le 0 nous sert à identifier l'eau sur la grille). Au moment de l'affichage de la grille, les archipals sont identifiables par des \textcolor{purple}{-2} et les portals par des " ' ".\\
+\item Le deuxième problème aura été de choisir entre l'algorithme de Floyd Warshall ou l'algorithme de Dijkstra, puisque l'algorithme de Floyd Warshall a une complexité en temps en $\Theta(N^{3})$ mais on exécute une seule et unique fois l'algorithme sur la matrice, tandis que l'algorithme de Dijkstra est en $\Theta(N^{2})$ mais il faut appliquer l'algorithme à chaque fois que l'on a besoin de la distance minimale entre deux cases (sachant que nous utilisons de nombreuses fois cette fonction), nous aurions pu faire une programmation dynamique aussi avec l'algorithme de Dijkstra, en sauvegardant les distances minimales déjà calculées mais notre choix est resté sur l'algorithme de Floyd Warshall.\\
+\item Le troisième problème qui n'a pas été résolu par manque de temps est le déplacement des bateaux dans la grille, puisqu'avec les portals, le déplacement des bateaux devient plus complexe, nous ne pouvons plus assurer la terminaison de notre jeu avec l'algorithme récursif de l'achievement2. 
+\end{itemize}

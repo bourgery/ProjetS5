@@ -1,0 +1,50 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Le principe du Jeu}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{D\351finition des probl\350mes de ce projet}{section.1}% 3
+\BOOKMARK [1][-]{section.2}{Achievement0}{}% 4
+\BOOKMARK [2][-]{subsection.2.1}{D\351finition des constantes et macro}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.2}{D\351finition des structures}{section.2}% 6
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Position}{subsection.2.2}% 7
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Case}{subsection.2.2}% 8
+\BOOKMARK [3][-]{subsubsection.2.2.3}{Grille}{subsection.2.2}% 9
+\BOOKMARK [3][-]{subsubsection.2.2.4}{Alignement}{subsection.2.2}% 10
+\BOOKMARK [3][-]{subsubsection.2.2.5}{Batal}{subsection.2.2}% 11
+\BOOKMARK [3][-]{subsubsection.2.2.6}{Joueur}{subsection.2.2}% 12
+\BOOKMARK [2][-]{subsection.2.3}{Fonctionnement achievement0}{section.2}% 13
+\BOOKMARK [3][-]{subsubsection.2.3.1}{Fonctions et Complexit\351}{subsection.2.3}% 14
+\BOOKMARK [3][-]{subsubsection.2.3.2}{Fonctionnement global du jeu}{subsection.2.3}% 15
+\BOOKMARK [2][-]{subsection.2.4}{Probl\350mes rencontr\351s}{section.2}% 16
+\BOOKMARK [1][-]{section.3}{Achievement1}{}% 17
+\BOOKMARK [2][-]{subsection.3.1}{Principe de l'achievement1}{section.3}% 18
+\BOOKMARK [2][-]{subsection.3.2}{Fonctionnement de l'achievement1}{section.3}% 19
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Distance minimale}{subsection.3.2}% 20
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Arriv\351e de la torpille}{subsection.3.2}% 21
+\BOOKMARK [3][-]{subsubsection.3.2.3}{Affichage des torpilles}{subsection.3.2}% 22
+\BOOKMARK [3][-]{subsubsection.3.2.4}{Fonctionnement de la boucle de jeu}{subsection.3.2}% 23
+\BOOKMARK [2][-]{subsection.3.3}{Probl\350mes rencontr\351s}{section.3}% 24
+\BOOKMARK [1][-]{section.4}{Achievement2}{}% 25
+\BOOKMARK [2][-]{subsection.4.1}{Principe de l'achievement2}{section.4}% 26
+\BOOKMARK [2][-]{subsection.4.2}{Fonctionnement de l'achievement2}{section.4}% 27
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Principe de la fonction r\351cursive}{subsection.4.2}% 28
+\BOOKMARK [3][-]{subsubsection.4.2.2}{Principe de la mise \340 jour}{subsection.4.2}% 29
+\BOOKMARK [3][-]{subsubsection.4.2.3}{Fonctionnement de l'affichage SDL pour le d\351placement des bateaux}{subsection.4.2}% 30
+\BOOKMARK [3][-]{subsubsection.4.2.4}{Fonctionnement de la boucle de jeu}{subsection.4.2}% 31
+\BOOKMARK [2][-]{subsection.4.3}{Probl\350mes rencontr\351es}{section.4}% 32
+\BOOKMARK [1][-]{section.5}{Achievement3}{}% 33
+\BOOKMARK [2][-]{subsection.5.1}{Principe de l\220achievement3}{section.5}% 34
+\BOOKMARK [2][-]{subsection.5.2}{Fonctionnement de l'achievement3}{section.5}% 35
+\BOOKMARK [3][-]{subsubsection.5.2.1}{Monstre oblit\350re des cases}{subsection.5.2}% 36
+\BOOKMARK [3][-]{subsubsection.5.2.2}{D\351placement du monstre non agress\351}{subsection.5.2}% 37
+\BOOKMARK [3][-]{subsubsection.5.2.3}{D\351placement du monstre agress\351}{subsection.5.2}% 38
+\BOOKMARK [3][-]{subsubsection.5.2.4}{Tour du monstre}{subsection.5.2}% 39
+\BOOKMARK [3][-]{subsubsection.5.2.5}{Affichage du chemin du monstre en SDL}{subsection.5.2}% 40
+\BOOKMARK [3][-]{subsubsection.5.2.6}{Fonctionnement de la boucle de jeu}{subsection.5.2}% 41
+\BOOKMARK [2][-]{subsection.5.3}{Probl\350mes rencontr\351s}{section.5}% 42
+\BOOKMARK [1][-]{section.6}{Achievement4}{}% 43
+\BOOKMARK [2][-]{subsection.6.1}{Principe de l\220achievement4}{section.6}% 44
+\BOOKMARK [2][-]{subsection.6.2}{Fonctionnement de l'achievement4}{section.6}% 45
+\BOOKMARK [3][-]{subsubsection.6.2.1}{Les nouvelles structures et constantes}{subsection.6.2}% 46
+\BOOKMARK [3][-]{subsubsection.6.2.2}{L'algorithme de Floyd Warshall}{subsection.6.2}% 47
+\BOOKMARK [3][-]{subsubsection.6.2.3}{Le fonctionnement g\351n\351ral de l'achievement4}{subsection.6.2}% 48
+\BOOKMARK [2][-]{subsection.6.3}{Probl\350mes rencontr\351s}{section.6}% 49
+\BOOKMARK [1][-]{section.7}{Conclusion}{}% 50

@@ -1,0 +1,126 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings} 
+\usepackage{color}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{colortbl}
+\usepackage{hyperref}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyfoot[C]{\textbf{page \thepage/26}}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\rightmark}
+\geometry{hscale=0.75,vscale=0.80,centering}
+\lstdefinestyle{customc}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{ForestGreen},
+  commentstyle=\itshape\color{purple},
+  identifierstyle=\color{blue!60!black},
+  stringstyle=\color{orange},
+}
+\lstdefinestyle{customasm}{
+  belowcaptionskip=1\baselineskip,
+  xleftmargin=\parindent,
+  language=[x86masm]Assembler,
+  basicstyle=\footnotesize\ttfamily,
+  commentstyle=\itshape\color{purple},
+}
+\lstset{escapechar=@,style=customc}
+\title{Naval Batal}
+\author{Jordan Barbier et Yoann Bourgery }
+\date{11 Décembre 2015}
+
+\begin{document}
+\begin{titlepage}
+  \begin{sffamily}
+    \begin{center}
+      \includegraphics[scale=0.07]{image/enseirb-matmeca.png}\\
+      \vspace{1cm}
+      \textsc{\LARGE Rapport de projet 1A}\\
+      \vspace{1.5cm}
+      \rule{\linewidth}{.5pt}
+      \vspace{0.5cm}
+      \\
+      {\huge \bfseries Naval Batal}
+      \\
+      \vspace{0.5cm}
+      \rule{\linewidth}{.5pt}\\
+      \vspace{0.5cm}
+      \includegraphics[scale=0.3]{image/Naval_battle.png}\\
+      \vspace{0.5cm}
+      \begin{minipage}{0.4\textwidth}
+          \begin{flushleft}
+            \begin{large}
+              Barbier Jordan\\
+              Bourgery Yoann\\
+            \end{large}
+          \end{flushleft}
+        \end{minipage}
+        \begin{minipage}{0.4\textwidth}
+            \begin{flushright}
+              \begin{large}
+                {\textit Encadrant : M. Ahmed Toufik}
+              \end{large}
+            \end{flushright}
+        \end{minipage}
+        \vfill
+        {\large 16 Octobre 2015 - 11 Décembre 2015}
+    \end{center}
+  \end{sffamily}
+\end{titlepage}
+\newpage
+\tableofcontents
+\newpage
+\section{Introduction}
+
+Le thème du projet est \textbf{Naval Batal}, le but de ce projet est donc d'implémenter le jeu Naval Batal en langage C. 
+
+\subsection{Le principe du Jeu}
+
+Le jeu Naval Batal est un jeu dont les règles sont inspirées d'une bataille navale classique, c'est à dire que chaque joueur possède une grille de case sur laquelle peut se situer des bateaux (appelés Batal ici) et le but du joueur est de toucher les cases des bateaux de son adversaire. Une fois toutes les cases de l'adversaire touchées, le joueur gagne la partie.
+
+\subsection{Définition des problèmes de ce projet}
+
+On peut soulever plusieurs problèmes à résoudre, plusieurs questions à se poser avant de commencer à coder ce projet. Les questions rencontrées sont les suivantes avec leurs solutions (solutions qui peuvent avoir été prises en début de projet puis modifier pour une meilleure implémentation) :\\
+\begin{itemize}
+\item \textbf{Comment implémenter la grille de chaque joueur ? Faut-il faire une grille pour chaque joueur ? Ou alors faire une grille commune pour contenir toutes les informations en même temps ?} \\
+Face à cette question, nous avons opté pour une grille commune implémentée sous forme d'un tableau linéaire d'entier. Chaque case de la grille contiendrait 0 pour de l'eau, 1 pour un bateau du joueur1, 2 pour un bateau du joueur2, 3 pour un bateau du joueur1 et simultanément du joueur2 et enfin -1 pour un case oblitéré. Cette structure sera modifiée plus tard dans le projet pour un tableau linéaire contenant, non plus des entiers, mais un tableau d'entier de taille {\textit{NB\_JOUEURS}} + 1 qui en case 0 contient l'information si la case est oblitérée ou non (-1 pour oblitéré, 0 sinon) et dans les positions i appartenant à [1,{\textit{NB\_JOUEURS}}], chaque case contient 1 si le $joueur_{i}$ possède un bateau présent sur cette case, 0 sinon. L'idée étant, dans une évolution future du jeu, de pouvoir implémenter plus de deux joueurs (ce qui n'a pas été demandé par la suite).\\
+
+\item \textbf{Comment implémenter un bateau ? Comment implémenter un joueur ?} \\
+La question qui nous a traversé l'esprit étant la nécessité de faire une structure de joueur ou/et de faire une structure de bateau. Et pour une raison de simplicité de code (au niveau de la relecture et au niveau de la programmation), nous avons trouvés plus simple de créer une structure de bateau et une structure de joueur.\\
+
+\item \textbf{Comment afficher une grille ?} \\ 
+Pour une meilleure compréhension de ce que nous faisions, en plus des fonctions de test, il était nécessaire de faire un affichage clair d'une partie et nous avons donc opté pour un affichage simple en texte dans la console du terminal. C'est seulement plus tard que nous avons opté pour un affichage plus avancé avec les fonctions de SDL.\\
+\end{itemize}
+\begin{lstlisting}
+\end{lstlisting}
+\newpage
+\section{Achievement0}
+\input{achievement0}
+\newpage
+\section{Achievement1}
+\input{achievement1}
+\newpage
+\section{Achievement2}
+\input{achievement2}
+\newpage
+\section{Achievement3}
+\input{achievement3}
+\newpage
+\section{Achievement4}
+\input{achievement4}
+\newpage
+\section{Conclusion}
+Ce projet nous a permis d'apprendre à travailler en équipe, c'est à dire apprendre à se répartir le travail ainsi qu'à réfléchir à deux avant d'implémenter les choses. C'est un travail formateur pour notre futur métier.\\
+Les tests que nous avons effectué lors de tous ces achievements nous ont permis d'éviter de regresser lorsqu'on avançait dans les achievements. Pour un autre projet, une méthode pourrait être de commencer par les tests et ensuite écrire nos fonctions.
+\end{document}

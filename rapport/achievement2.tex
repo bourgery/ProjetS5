@@ -1,0 +1,132 @@
+\subsection{Principe de l'achievement2}
+Le but de l'achievement2 est de pouvoir déplacer les bateaux à chaque tour de jeu sans que ceux-ci ne passent sur des cases qui sont oblitérées ou bien occupées par un bateau. \\
+Pour réaliser cela il faut lister toutes les cases disponibles où le bateau peut aller avec une suite de translation finie.
+
+\subsection{Fonctionnement de l'achievement2}
+La fonction permettant de lister les cases possibles (ie la position de départ pour le bateau est possible) est une fonction récursive qui est appelé par une autre fonction. Son prototype est : 
+\begin{lstlisting}
+void liste_case_possibles(struct Grille grille, struct Batal bat, int tab[], int liste_indice_oblitere[], int tab_prec[]);
+\end{lstlisting}
+Cette fonction permet d'enlever le bateau dans la grille ainsi que de mettre les indices du bateau qui sont oblitérés dans le tableau liste\_indice\_oblitere (0 : oblitéré, 1 : intact), puis de lancer la fonction récursive dans les 4 directions si possible.\\
+Puis ensuite il va falloir mettre à jour la grille ainsi que le bateau avec ses nouvelles positions puis le joueur afin de changer les positions de ses cases toujours en vie ainsi qu'afficher le chemin du bateau (en SDL).
+
+\subsubsection{Principe de la fonction récursive}
+Son prototype est :
+\begin{lstlisting}
+void liste_case_possiblesrec(struct Grille grille, struct Batal bateau, int tab[], int indice, int liste_indice_oblitere[ ], int tab_prec[ ]);
+\end{lstlisting}
+Cette fonction explore les cases dans les 4 directions possibles sans sortir de la grille et s'arrete lorsqu'une case est impossible ou que la case a déjà été exploré. Elle modifie le tableau tab en mettant 0 si la case n'a pas été exploré -1 si la case est impossible pour mettre le bateau et 1 si c'est possible. Le tableau tab\_prec permet de se rappeler à partir de quelle case on a pu arriver à l'indice i. Cette fonction s'arrete lorsque toutes les cases sont explorées ou lorsqu'après les 4 appels récursifs aucune case supplémentaire n'est possible (ie les cases autour sont déjà explorées ou on arrive sur une case impossible).\\
+La fonction fait appel à une autre fonction qui permet de vérifier si un bateau peut se placer à cet endroit, le prototype de cette fonction est :
+\begin{lstlisting}
+int verif_arrive_bateau(struct Grille grille, struct Batal bat, int liste_indice_oblitere[]);
+\end{lstlisting}
+Cette fonction vérifie pour toute les cases du bateau toujours en vie si elle ne se trouve pas sur une case oblitérée, occupée par un monstre, un archipal ou un bateau d'un autre joueur et ne dépasse pas de la grille. Elle est de compléxitée $\Theta(m)$ où m est la taille du bateau. \\
+La compléxité de la fonction récursive est donc en $\Theta(n*m)$ où n est le nombre de case de la grille. \\
+Voilà un exemple de la fonction et des cases qu'elles explorent on prend la case bleu comme case de départ et les cases rouges comme oblitérées, on prend un bateau de taille 1 pour faciliter l'exemple:
+\\
+\begin{center}
+\begin{tabular}{c|c|c|c|c|}
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4}\\
+\cline{2-5} 1 & 0 & \cellcolor{red}0 & 0 & 0\\
+\cline{2-5} 2 & \cellcolor{red}0 & 0 & 0 & \cellcolor{red}0\\
+\cline{2-5} 3 & 0 & 0 & \cellcolor{blue}0 & 0\\
+\cline{2-5} 4 & 0 & 0 & 0 & 0\\
+\cline{2-5}
+\end{tabular}
+\end{center}
+On va lancer des appels récursifs sur les 4 cases autour de la case bleu, ceci se passe dans la fonction non récursive.\\
+\begin{center}
+\begin{tabular}{c|c|c|c|c|}
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4}\\
+\cline{2-5} 1 & 0 & \cellcolor{red}0 & 0 & 0\\
+\cline{2-5} 2 & \cellcolor{red}0 & 0 & \cellcolor{green}0 & \cellcolor{red}0\\
+\cline{2-5} 3 & 0 & \cellcolor{green}0 & 0 & \cellcolor{green}0\\
+\cline{2-5} 4 & 0 & 0 & \cellcolor{green}0 & 0\\
+\cline{2-5}
+\end{tabular}
+\end{center}
+On va lancer des appels récursifs autour des 4 cases vertes car les 4 sont possibles elles vont donc prendre la valeur de 1.\\
+\begin{center}
+\begin{tabular}{c|c|c|c|c|}
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4}\\
+\cline{2-5} 1 & 0 & \cellcolor{red}0 & \cellcolor{green}0 & 0\\
+\cline{2-5} 2 & \cellcolor{red}0 & \cellcolor{green}0 & 1 & \cellcolor{red}\color{blue}{0}\\
+\cline{2-5} 3 & \cellcolor{green}0 & 1 & \cellcolor{green}0 & 1\\
+\cline{2-5} 4 & 0 & \cellcolor{green}0 & 1 & \cellcolor{green}0\\
+\cline{2-5}
+\end{tabular}
+\end{center}
+On va lancer maintenant des appels dans les 4 directions si on ne sort pas de grille par exemple pour le 1 en position (4, 3), on ne va pas lancer d'appel récursif vers le bas car sinon on sortirait de la grille. La position (2, 4) n'est pas possible car on se trouve sur une case oblitérée on va donc mettre un -1 dans la case et ne pas lancer d'autres appels récursifs partant de cette case.\\ 
+\begin{center}
+\begin{tabular}{c|c|c|c|c|}
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4}\\
+\cline{2-5} 1 & 0 & \cellcolor{red}\color{blue}{0} & 1 & \cellcolor{green}0\\
+\cline{2-5} 2 & \cellcolor{red}\color{blue}{0} & 1 & 1 & \cellcolor{red}-1\\
+\cline{2-5} 3 & 1 & 1 & 1 & 1\\
+\cline{2-5} 4 & \cellcolor{green}0 & 1 & 1 & 1\\
+\cline{2-5}
+\end{tabular}
+\end{center}
+Là, on va lancer les derniers appels récursifs sur les cases qui ne sont pas déjà visitées c'est à dire la case (1, 2), (1, 4), (2, 1), (4, 1). \\ 
+\begin{center}
+\begin{tabular}{c|c|c|c|c|}
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4}\\
+\cline{2-5} 1 & 0 & \cellcolor{red}-1 & 1 & 1\\
+\cline{2-5} 2 & \cellcolor{red}-1 & 1 & 1 & \cellcolor{red}-1\\
+\cline{2-5} 3 & 1 & 1 & 1 & 1\\
+\cline{2-5} 4 & 1 & 1 & 1 & 1\\
+\cline{2-5}
+\end{tabular}
+\end{center}
+La fonction s'arrête car sur les derniers appels récursifs aux cases (1, 2) et (2, 1) qui ne sont pas possibles et pour les cases (1, 4) et (4, 1) toutes les cases autour sont déjà explorées, donc on obtient le schéma ci dessus avec la case (1, 1) qui n'a pas été exploré.
+\subsubsection{Principe de la mise à jour}
+Il faut mettre à jour la structure Batal, ce qui consiste juste à l'initialiser avec sa nouvelle position de départ. Pour cela on utilise la fonction :
+\begin{lstlisting}
+void mise_a_jour_batal(struct Batal *bat, struct Position *nouvelle);
+\end{lstlisting}
+Puis il faut mettre à jour la structure Joueur afin de changer ses cases en vie.
+Pour cela on utilise la fonction :
+\begin{lstlisting}
+void mise_a_jour_liste(struct Batal bat, struct Joueur *joueur, struct Position *nouvelle){
+  int tab[bat.taille];
+  for(int i = 0; i < bat.taille; i++){
+      tab[i] = indice_pos_dans_tab(&bat.tab[i], joueur->case_en_vie, joueur->taille);
+  }
+  mise_a_jour_batal(&bat, nouvelle);
+  for(int i = 0; i < bat.taille; i++){
+    if(tab[i] >= 0)
+      joueur->case_en_vie[tab[i]] = bat.tab[i];
+  }
+}
+\end{lstlisting}
+Premièrement, il faut se rappeler des cases qui sont oblitérées car on aura pas besoin de les changer, c'est le rôle du tableau tab, puis on met à jour le bateau avec ses nouvelles positions et on change les indices des nouvelles positions lorsque les anciennes n'étaient pas oblitérées.\\
+\\
+Ensuite, il faut mettre à jour la grille, c'est à dire enlever les anciennes cases du bateau et les remettre aux nouvelles positions que lorsque les cases précédentes n'étaient pas oblitérées. Ce qui suit un peu le même principe que la fonction précédente. On va aussi dans cette fonction changer les positions du bateau "pour de vrai". Cette fonction est :
+\begin{lstlisting}
+void mise_a_jour_structure(struct Grille *grille, struct Batal *bat, int liste_indice_oblitere[], struct Position *nouvelle);
+\end{lstlisting}
+\subsubsection{Fonctionnement de l'affichage SDL pour le déplacement des bateaux}
+Il faut se rappeler du chemin que la bateau à pris, pour celà on utilise l'argument tab\_prec dans la fonction récursive. Grâce à ce tableau, en partant de la position finale, on peut obtenir toutes les positions que la bateau a utilisé pour se déplacer. Une fois qu'on a toutes ses positions, le principe consiste à afficher les cases du bateau à chaque position du chemin puis de les enlever et d'afficher ensuite le bateau à la position suivante. 
+\subsubsection{Fonctionnement de la boucle de jeu}
+Notre fonction qui fait tourner la boucle de jeu a pour prototype :
+\begin{lstlisting}
+int achievement2(SDL_Surface *ecran, int affichage);
+\end{lstlisting}
+Elle prend un paramètre un écran si on utilise l'affichage SDL et un entier qui permet de savoir l'affichage souhaité et retourne un entier afin de nous dire le joueur qui a gagné.\\
+Notre boucle de jeu tourne tant qu'il reste des bateaux des 2 joueurs et que le nombre de coup n'a pas dépassé la constante {\textit{NB\_COUP\_MAX}}. Dans notre boucle, on va :
+\begin{itemize}
+\item Déplacer un bateau du joueur1 si c'est possible.
+\item Déplacer un bateau du joueur2 si c'est possible.
+\item Calculer la position d'arrivée des torpilles pour les deux joueurs.
+\item Oblitérer les cases si la position d'arrivée est possible(ie ne dépasse pas la distance maximale)
+\item Incrémenter le nombre de coup
+\end{itemize}
+La fonction termine pour les mêmes raisons que dans l'achievement1 car notre structure de la boucle reste la même avec juste au début la possibilité de bouger les bateaux ce qui ne change pas la valeur de nb\_coup.
+\subsection{Problèmes rencontrées}
+\begin{itemize}
+\item On a rencontré un problème dans la recherche d'un algorithme pour avoir l'ensemble des cases possibles sans tester tous les chemins possibles car ceci reviendrait à une compléxité de $\Theta(4^n)$ ce qui serait trop long. C'est pour cela qu'on a préféré chercher une solution où on parcourt une seule fois chaque case ce qui est le cas avec la fonction qu'on a implémenté.\\
+\item On a aussi rencontré un problème lorsqu'on a du mettre à jour les structures car au départ on ne pensait pas à distinguer les cases qui étaient précédement oblitérées ou non. Ce qui nous a causé le problème d'avoir l'impression que des cases des bateaux ressuscitaient sur la grille.
+\end{itemize}
+
+
+ 
