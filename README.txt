@@ -1,3 +1,4 @@
+Ceci est le projet du semestre 5 de l’enseirb qui consistait à réaliser une bataille navale avec différents objectifs.
 Il faut installer la police angelina.TTF qui se trouve dans le dossier doc.
 Pour lancer la compilation de tous les fichiers il faut exécuter la commande make.
 Pour exécuter l'achievement "i" il faut exécuter la commande make execute"i" pour avoir l'affichage dans le terminal et la commande make executeSDL"i" pour avoir l'affichage en SDL.
